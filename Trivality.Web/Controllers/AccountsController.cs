@@ -1,23 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Trivality.Models.Domain;
+using Trivality.Services;
 
 namespace Trivality.Web.Controllers
 {
     [RoutePrefix("api/accounts")]
     public class AccountsController : ApiController
     {
-        [Route, HttpGet]
-        public HttpResponseMessage Get()
+        AccountService svc;
+
+        public AccountsController()
         {
-            return Request.CreateResponse(HttpStatusCode.OK, "Data");
+            svc = new AccountService();
+        }
+
+        [Route, HttpGet]
+        public HttpResponseMessage GetAll()
+        {
+            List<Account> list = svc.SelectAll();
+            return Request.CreateResponse(HttpStatusCode.OK, list);
         }
 
         [Route("{id:int}"), HttpGet]
-        public HttpResponseMessage Get(int id)
+        public HttpResponseMessage GetById(int id)
         {
             return Request.CreateResponse(HttpStatusCode.OK, "Heres your id: " + id);
         }
