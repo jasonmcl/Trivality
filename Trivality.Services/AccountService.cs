@@ -68,5 +68,33 @@ namespace Trivality.Services
             }
             return list;
         }
+
+        public Account SelectById(int id)
+        {
+            Account model = new Account();
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                string cmdText = "accounts_selectbyid";
+                using (SqlCommand cmd = new SqlCommand(cmdText, conn))
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    conn.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while(reader.Read())
+                    {
+                        int index = 0;
+                        model.Id = reader.GetInt32(index++);
+                        model.Username = reader.GetString(index++);
+                        model.Email = reader.GetString(index++);
+                        model.CreatedDate = reader.GetDateTime(index++);
+                        model.ModifiedDate = reader.GetDateTime(index++);
+                        model.ModifiedBy = reader.GetString(index++);
+                    }
+                    conn.Close();
+                }
+            }
+            return model;
+        }
     }
 }

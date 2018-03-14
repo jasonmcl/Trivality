@@ -31,5 +31,13 @@ namespace Trivality.UnitTests
             List<Account> list = svc.SelectAll();
             Assert.IsTrue(list.Count > 0);
         }
+
+        [TestMethod]
+        public void SelectByIdTest()
+        {
+            AccountService svc = new AccountService();
+            Account result = svc.SelectById(1);
+            Assert.IsTrue(result.Id > 0);
+        }
     }
 }
