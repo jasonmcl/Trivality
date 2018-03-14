@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Trivality.Models.Domain;
 using Trivality.Models.Requests;
 using Trivality.Services;
 
@@ -20,6 +22,14 @@ namespace Trivality.UnitTests
             AccountService svc = new AccountService();
             int result = svc.Insert(model);
             Assert.IsTrue(result > 0);
+        }
+
+        [TestMethod]
+        public void SelectAllTest()
+        {
+            AccountService svc = new AccountService();
+            List<Account> list = svc.SelectAll();
+            Assert.IsTrue(list.Count > 0);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Trivality.Models.Domain;
 using Trivality.Models.Requests;
 
 namespace Trivality.Services
@@ -37,6 +38,35 @@ namespace Trivality.Services
                 }
             }
             return id;
+        }
+
+        public List<Account> SelectAll()
+        {
+            List<Account> list = new List<Account>();
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                string cmdText = "accounts_selectall";
+                using(SqlCommand cmd = new SqlCommand(cmdText, conn))
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    conn.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while(reader.Read())
+                    {
+                        Account model = new Account();
+                        int index = 0;
+                        model.Id = reader.GetInt32(index++);
+                        model.Username = reader.GetString(index++);
+                        model.Email = reader.GetString(index++);
+                        model.CreatedDate = reader.GetDateTime(index++);
+                        model.ModifiedDate = reader.GetDateTime(index++);
+                        model.ModifiedBy = reader.GetString(index++);
+                        list.Add(model);
+                    }
+                    conn.Close();
+                }
+            }
+            return list;
         }
     }
 }
