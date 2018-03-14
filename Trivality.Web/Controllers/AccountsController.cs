@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Trivality.Models.Domain;
+using Trivality.Models.Responses;
 using Trivality.Services;
 
 namespace Trivality.Web.Controllers
@@ -20,8 +21,9 @@ namespace Trivality.Web.Controllers
         [Route, HttpGet]
         public HttpResponseMessage GetAll()
         {
-            List<Account> list = svc.SelectAll();
-            return Request.CreateResponse(HttpStatusCode.OK, list);
+            ItemListResponse<Account> resp = new ItemListResponse<Account>();
+            resp.Item = svc.SelectAll();
+            return Request.CreateResponse(HttpStatusCode.OK, resp);
         }
 
         [Route("{id:int}"), HttpGet]
