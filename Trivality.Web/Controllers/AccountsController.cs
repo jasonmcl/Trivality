@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Trivality.Models.Domain;
+using Trivality.Models.Requests;
 using Trivality.Models.Responses;
 using Trivality.Services;
 
@@ -21,33 +23,92 @@ namespace Trivality.Web.Controllers
         [Route, HttpGet]
         public HttpResponseMessage GetAll()
         {
-            ItemListResponse<Account> resp = new ItemListResponse<Account>();
-            resp.Item = svc.SelectAll();
-            return Request.CreateResponse(HttpStatusCode.OK, resp);
+            try
+            {
+                ItemListResponse<Account> resp = new ItemListResponse<Account>();
+                resp.Item = svc.SelectAll();
+                return Request.CreateResponse(HttpStatusCode.OK, resp);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
+            }
         }
 
         [Route("{id:int}"), HttpGet]
         public HttpResponseMessage GetById(int id)
         {
-            return Request.CreateResponse(HttpStatusCode.OK, "Heres your id: " + id);
+            try
+            {
+                ItemResponse<Account> resp = new ItemResponse<Account>();
+                resp.Item = svc.SelectById(id);
+                return Request.CreateResponse(HttpStatusCode.OK, resp);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
+            }
         }
 
         [Route, HttpPost]
-        public HttpResponseMessage Post([FromBody]string value)
+        public HttpResponseMessage Post([FromBody]AccountAddRequest model)
         {
-            return Request.CreateResponse(HttpStatusCode.OK, "Posted");
+            try
+            {
+                if(ModelState.IsValid)
+                {
+                    ItemResponse<int> resp = new ItemResponse<int>();
+                    model.ModifiedBy = "API";
+                    resp.Item = svc.Insert(model);
+                    return Request.CreateResponse(HttpStatusCode.OK, resp);
+                }
+                else
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
+            }
         }
 
         [Route("{id:int}"), HttpPut]
-        public HttpResponseMessage Put(int id, [FromBody]string value)
+        public HttpResponseMessage Put(int id, [FromBody]AccountUpdateRequest model)
         {
-            return Request.CreateResponse(HttpStatusCode.OK, "Updated");
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    model.ModifiedBy = "Temp Modifier";
+                    svc.Update(model);
+                    SuccessResponse resp = new SuccessResponse();
+                    return Request.CreateResponse(HttpStatusCode.OK, resp);
+                }
+                else
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
+            }
         }
 
         [Route("{id:int}"), HttpDelete]
         public HttpResponseMessage Delete(int id)
         {
-            return Request.CreateResponse(HttpStatusCode.OK, "Deleted");
+            try
+            {
+                SuccessResponse resp = new SuccessResponse();
+                svc.Delete(id);
+                return Request.CreateResponse(HttpStatusCode.OK, resp);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
+            }
         }
     }
 }
