@@ -1,0 +1,20 @@
+.topBar {
+  background-color: #333333;
+}
+
+body {
+  padding-top: 54px;
+}
+@media (min-width: 992px) {
+  body {
+    padding-top: 56px;
+  }
+  .topbar-hide {
+    visibility: hidden;
+  }
+}
+
+.navbar-nav > li > a {
+  cursor: pointer;
+}
+
