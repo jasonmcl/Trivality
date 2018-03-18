@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -14,7 +13,6 @@ namespace Trivality.Web.Controllers
     public class AccountsController : ApiController
     {
         AccountService svc;
-
         public AccountsController()
         {
             svc = new AccountService();
