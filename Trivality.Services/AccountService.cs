@@ -5,10 +5,8 @@ using Trivality.Models.Requests;
 
 namespace Trivality.Services
 {
-    public class AccountService
+    public class AccountService : BaseService
     {
-        private string connStr = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-        
         public int Insert(AccountAddRequest model)
         {
             int id = 0;

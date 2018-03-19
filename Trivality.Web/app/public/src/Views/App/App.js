@@ -9,6 +9,17 @@ class App extends Component {
     .then(resp => console.log(resp.data.item));
   }
 
+  uploadFileTest = (e) => {
+    const files = e.target.files;
+    console.log('files: ', files);
+
+    var formdata = new FormData();
+    formdata.append("file", files[0]);
+
+    axios.post("/api/files/uploadtest", formdata)
+    .then(resp => console.log(resp));
+  }
+
   render() {
     return (
       <div className="App">
@@ -33,6 +44,7 @@ class App extends Component {
         <div className="colorTest bg4"></div>
         <div className="colorTest bg5"></div> */}
         <button onClick={this.handleCookieTest}>Cookie Test</button>
+        <input onChange={this.uploadFileTest} type="file" accept="image/*" />
       </div>
     );
   }
