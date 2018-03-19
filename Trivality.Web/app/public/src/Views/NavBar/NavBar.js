@@ -3,26 +3,49 @@ import { NavLink } from "react-router-dom";
 //import TopBar from '../TopBar/TopBar';
 import RegisterLoginModal from '../RegisterLoginModal/RegisterLoginModal';
 import "./NavBar.css";
-import { Layout, Menu, Breadcrumb, Icon } from "antd";
+import { Layout, Menu, Icon } from "antd";
 import {withRouter} from 'react-router-dom';
+import axios from 'axios';
 const { Header, Content, Footer, Sider } = Layout;
-const SubMenu = Menu.SubMenu;
 
 class NavBar extends React.Component {
-  state = {
-    collapsed: false,
-    current: '1',
-    loginVisible: false
-  };
-  onCollapse = collapsed => {
-    this.setState({ collapsed });
-  };
+    constructor(props){
+        super(props);
+        this.state = {
+            collapsed: false,
+            current: '1',
+            loginVisible: false,
+            loggedIn: false,
+            user: {}
+        }
+    }
 
-  handleClick = e => {
-      this.setState({
-          current: e.key
-      })
-  }
+    componentDidMount = () => {
+        this.getCurrUser();
+    }
+
+    getCurrUser = () => {
+        axios.get('/api/user/current')
+        .then(resp => {
+            const user = resp.data.item;
+            console.log(user);
+            let loggedIn = user.id != 0;
+            this.setState({
+                loggedIn: loggedIn,
+                user: user
+            })
+        })
+    }
+
+    onCollapse = collapsed => {
+        this.setState({ collapsed });
+    };
+
+    handleClick = e => {
+        this.setState({
+            current: e.key
+        })
+    }
 
     showLoginModal = () => {
         this.setState({
@@ -33,6 +56,18 @@ class NavBar extends React.Component {
     hideLoginModal = () => {
         this.setState({
             loginVisible: false
+        })
+    }
+
+    handleLoginFinish = () => {
+        this.getCurrUser();
+    }
+
+    handleLogout = () => {
+        axios.get('/api/user/logout')
+        .then(resp => {
+            console.log(resp);
+            this.getCurrUser();
         })
     }
 
@@ -66,13 +101,17 @@ class NavBar extends React.Component {
             <Layout>
                 <Header className="topbar-full">
                     <Menu theme="dark" className="float-right topbar-menu" mode="horizontal" selectedKeys={['0']}>
-                        <Menu.Item>
-                            <a onClick={this.showLoginModal}>Log in/Register</a>
-                            <RegisterLoginModal hideModal={this.hideLoginModal} visible={this.state.loginVisible}/>
-                        </Menu.Item>
-                        <Menu.Item>
-                            <span>Log out</span>
-                        </Menu.Item>
+                        {
+                            !this.state.loggedIn ? 
+                                <Menu.Item>
+                                    <a onClick={this.showLoginModal}>Log in/Register</a>
+                                    <RegisterLoginModal hideModal={this.hideLoginModal} visible={this.state.loginVisible} loginFinish={this.handleLoginFinish}/>
+                                </Menu.Item>
+                            :
+                                <Menu.Item>
+                                    <a onClick={this.handleLogout}>Log out</a>
+                                </Menu.Item>
+                        }
                     </Menu>
                 </Header>
                 <Content>{this.props.children}</Content>

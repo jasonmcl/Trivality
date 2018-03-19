@@ -26,6 +26,8 @@ namespace Trivality.Services
                     cmd.Parameters.Add(param);
                     cmd.Parameters.AddWithValue("@Username", model.Username);
                     cmd.Parameters.AddWithValue("@Email", model.Email);
+                    cmd.Parameters.AddWithValue("@PasswordHash", model.PasswordHash);
+                    cmd.Parameters.AddWithValue("@Salt", model.Salt);
                     cmd.Parameters.AddWithValue("@ModifiedBy", model.ModifiedBy);
                     conn.Open();
                     cmd.ExecuteNonQuery();
@@ -54,6 +56,8 @@ namespace Trivality.Services
                         model.Id = reader.GetInt32(index++);
                         model.Username = reader.GetString(index++);
                         model.Email = reader.GetString(index++);
+                        model.PasswordHash = reader.GetString(index++);
+                        model.Salt = reader.GetString(index++);
                         model.CreatedDate = reader.GetDateTime(index++);
                         model.ModifiedDate = reader.GetDateTime(index++);
                         model.ModifiedBy = reader.GetString(index++);
@@ -65,33 +69,36 @@ namespace Trivality.Services
             return list;
         }
 
-        public Account SelectById(int id)
-        {
-            Account model = new Account();
-            using (SqlConnection conn = new SqlConnection(connStr))
-            {
-                string cmdText = "accounts_selectbyid";
-                using (SqlCommand cmd = new SqlCommand(cmdText, conn))
-                {
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@Id", id);
-                    conn.Open();
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    while(reader.Read())
-                    {
-                        int index = 0;
-                        model.Id = reader.GetInt32(index++);
-                        model.Username = reader.GetString(index++);
-                        model.Email = reader.GetString(index++);
-                        model.CreatedDate = reader.GetDateTime(index++);
-                        model.ModifiedDate = reader.GetDateTime(index++);
-                        model.ModifiedBy = reader.GetString(index++);
-                    }
-                    conn.Close();
-                }
-            }
-            return model;
-        }
+        //TODO: Broke because i changed the stored procedure
+        //public Account SelectById(int id)
+        //{
+        //    Account model = new Account();
+        //    using (SqlConnection conn = new SqlConnection(connStr))
+        //    {
+        //        string cmdText = "accounts_selectbyid";
+        //        using (SqlCommand cmd = new SqlCommand(cmdText, conn))
+        //        {
+        //            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+        //            cmd.Parameters.AddWithValue("@Id", id);
+        //            conn.Open();
+        //            SqlDataReader reader = cmd.ExecuteReader();
+        //            while(reader.Read())
+        //            {
+        //                int index = 0;
+        //                model.Id = reader.GetInt32(index++);
+        //                model.Username = reader.GetString(index++);
+        //                model.PasswordHash = reader.GetString(index++);
+        //                model.Salt = reader.GetString(index++);
+        //                model.Email = reader.GetString(index++);
+        //                model.CreatedDate = reader.GetDateTime(index++);
+        //                model.ModifiedDate = reader.GetDateTime(index++);
+        //                model.ModifiedBy = reader.GetString(index++);
+        //            }
+        //            conn.Close();
+        //        }
+        //    }
+        //    return model;
+        //}
 
         public void Update(AccountUpdateRequest model)
         {
@@ -103,6 +110,8 @@ namespace Trivality.Services
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@Id", model.Id);
                     cmd.Parameters.AddWithValue("@Username", model.Username);
+                    cmd.Parameters.AddWithValue("@PasswordHash", model.PasswordHash);
+                    cmd.Parameters.AddWithValue("@Salt", model.Salt);
                     cmd.Parameters.AddWithValue("@Email", model.Email);
                     cmd.Parameters.AddWithValue("@ModifiedBy", model.ModifiedBy);
                     conn.Open();
