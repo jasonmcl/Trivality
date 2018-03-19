@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import logo from '../../logo.svg';
 import './App.css';
-import { DatePicker } from 'antd';
 import axios from 'axios';
 
 class App extends Component {
+  handleCookieTest = () => {
+    axios.get('/api/user/cookietest')
+    .then(resp => console.log(resp.data.item));
+  }
+
   render() {
     return (
       <div className="App">
@@ -23,11 +27,12 @@ class App extends Component {
         <div className="colorTest bgRed"></div>
         <div className="colorTest bgOrange"></div>
         <div className="colorTest bgYellow"></div> */}
-        <div className="colorTest bg1"></div>
+        {/* <div className="colorTest bg1"></div>
         <div className="colorTest bg2"></div>
         <div className="colorTest bg3"></div>
         <div className="colorTest bg4"></div>
-        <div className="colorTest bg5"></div>
+        <div className="colorTest bg5"></div> */}
+        <button onClick={this.handleCookieTest}>Cookie Test</button>
       </div>
     );
   }

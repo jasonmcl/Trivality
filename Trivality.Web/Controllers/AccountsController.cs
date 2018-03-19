@@ -39,7 +39,7 @@ namespace Trivality.Web.Controllers
             try
             {
                 ItemResponse<Account> resp = new ItemResponse<Account>();
-                resp.Item = svc.SelectById(id);
+                //resp.Item = svc.SelectById(id);
                 return Request.CreateResponse(HttpStatusCode.OK, resp);
             }
             catch (Exception ex)

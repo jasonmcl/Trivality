@@ -41,16 +41,21 @@ class RegisterLoginModal extends React.Component {
 
     handleSubmitClick = () => {
         if(this.state.activeTab === "register") {
-            axios.post('/api/accounts', this.state.regInfo)
+            axios.post('/api/user/register', this.state.regInfo)
             .then(resp => {
                 console.log(resp);
                 // $("#" + this.props.id).modal('hide');
                 this.props.hideModal();
+                this.props.loginFinish();                
             })
         } else if(this.state.activeTab === "login") {
             console.log(this.state.loginInfo);
-            this.props.hideModal();        
-            // $("#" + this.props.id).modal('hide');
+            axios.post("/api/user/login", this.state.loginInfo)
+            .then(resp => {
+                console.log(resp);
+                this.props.hideModal();
+                this.props.loginFinish();
+            })
         }
 
         this.clearFormValues();

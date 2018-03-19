@@ -13,7 +13,7 @@ function Register(props){
                     value={props.formVal.email} 
                     onChange={handleInputChange} 
                     name="email" 
-                    prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}} />} 
+                    prefix={<Icon type="mail" style={{color: 'rgba(0,0,0,.25)'}} />} 
                     placeholder="Email">
                 </Input>
             </Form.Item>
@@ -22,7 +22,7 @@ function Register(props){
                     value={props.formVal.username} 
                     onChange={handleInputChange} 
                     name="username" 
-                    prefix={<Icon type="mail" style={{color: 'rgba(0,0,0,.25)'}} />} 
+                    prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}} />} 
                     placeholder="Username">
                 </Input>
             </Form.Item>

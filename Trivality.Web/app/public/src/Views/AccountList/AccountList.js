@@ -27,6 +27,8 @@ class AccountList extends React.Component {
                             <th>Id</th>
                             <th>Username</th>
                             <th>Email</th>
+                            <th>PasswordHash</th>
+                            <th>Salt</th>
                             <th>Created Date</th>
                             <th>Modified Date</th>
                             <th>Modified By</th>
@@ -40,6 +42,8 @@ class AccountList extends React.Component {
                                         <td>{acc.id}</td>
                                         <td>{acc.username}</td>
                                         <td>{acc.email}</td>
+                                        <td>{acc.passwordHash}</td>
+                                        <td>{acc.salt}</td>
                                         <td>{acc.createdDate}</td>
                                         <td>{acc.modifiedDate}</td>
                                         <td>{acc.modifiedBy}</td>
