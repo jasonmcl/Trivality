@@ -1,19 +1,118 @@
 import React from 'react';
-import { Row, Col, Card } from 'antd';
+import { Row, Col, Card, Divider, Button, Input, Upload, Icon } from 'antd';
+import axios from 'axios';
+import './Profile.css';
+const { TextArea } = Input;
 
 class Profile extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            accountInfo:  {
+                accountId: 1,
+                picturePath: "",
+                profilePicId: 1,
+                description: ""
+            },
+            editing: false
+        }
+    }
+
+    componentDidMount = () => {
+        axios.get('/api/accounts/getprofile')
+        .then(resp => {
+            console.log("getprofile ", resp.data.item);
+            this.setState({
+                accountInfo: resp.data.item
+            })
+        });
+    }
+
+    updateProfile = () => {
+        axios.post('/api/accounts/updateprofile', this.state.accountInfo)
+        .then(resp => {
+            console.log(resp);
+            this.setState({
+                accountInfo: resp.data.item
+            })
+        })
+    }
+
+    handleEditClick = () => {
+        const editing = this.state.editing;
+
+        if(editing) {
+            this.updateProfile();
+        }
+
+        this.setState({
+            editing: !editing
+        })
+    }
+
+    handleChangePicture = (info) => {
+        const file = info.file;
+        console.log('file: ', file);
+
+        var formdata = new FormData();
+        formdata.append("file", file);
+
+        axios.post("/api/files/upload", formdata)
+        .then(resp => {
+            console.log(resp);
+            let accInfo = {...this.state.accountInfo}
+            accInfo.profilePicId = resp.data.item;
+            this.setState({
+                accountInfo: accInfo
+            }, ()=>this.updateProfile());
+        });
+    }
+
+    handleDescriptionChange = (e) => {
+        console.log(e.target);
+        let accInfo = this.state.accountInfo;
+        accInfo.description = e.target.value;
+        this.setState({
+            accountInfo: accInfo
+        })
+    }
+
+    beforeUpload = file => {
+        return false;
+    }
+
     render() {
+        const accountInfo = this.state.accountInfo;
 
         const ProfileTitle = (
-            <Row>
-                <Col span={8} offset={6}>
-                    <img 
-                        className="img-responsive" 
-                        src="https://texasbarblog.lexblogplatformtwo.com/files/2011/12/housto-bankruptcy-attorney-adam-schachter1.jpg" 
-                        alt="profile"
-                    />
-                </Col>
-            </Row>
+            <div>
+                <Row type="flex" justify="center">
+                    <Col span={12}>
+                        <img width='100%'
+                            className="img-responsive" 
+                            src= {accountInfo.picturePath || "http://laoblogger.com/images/default-profile-picture-5.jpg"}
+                            alt="profile"
+                        />
+                    </Col>
+                </Row>
+                { this.state.editing && 
+                    <div>
+                        <br/>
+                        <Row type="flex" justify="center">
+                            <Col>
+                                <Upload
+                                    name= 'file'
+                                    beforeUpload={()=>false}
+                                    onChange={this.handleChangePicture}
+                                    fileList = {[]}
+                                >
+                                    <Button><Icon type="upload" />Change Profile Picture</Button>
+                                </Upload>
+                            </Col>
+                        </Row>
+                    </div>
+                }
+            </div>
         );
 
         return (
@@ -23,7 +122,16 @@ class Profile extends React.Component {
                         style={{margin: '5px'}}
                         bordered={false} 
                         title={ProfileTitle}>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam odio justo, rhoncus vitae orci quis, dignissim pharetra lacus. Duis vehicula suscipit justo, et mattis ante efficitur non. Vivamus ultrices, lorem ut malesuada vulputate, tortor mauris eleifend eros, sit amet viverra ante dolor ut ligula. Ut fringilla lectus lectus, sed bibendum tellus vulputate ut. Fusce ornare leo sit amet dui sagittis auctor. Integer dapibus pellentesque dui quis dapibus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed nec velit a eros aliquet iaculis. Pellentesque sagittis lacinia molestie. Nunc massa lacus, iaculis ut risus non, efficitur gravida justo. Nullam vestibulum in tortor rutrum auctor. Vivamus et ligula tellus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis egestas tellus felis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tincidunt nunc non libero volutpat rhoncus.</p>
+                        {!this.state.editing ? 
+                        <p className='wrap'>{this.state.accountInfo.description}</p>
+                        :
+                        <div>
+                            <TextArea onChange={this.handleDescriptionChange} value={this.state.accountInfo.description.substr(0, 500)} rows={10} style={{resize: 'none'}}/>
+                            <p>{this.state.accountInfo.description.length} / 500</p>
+                        </div>
+                        }
+                        <Divider />
+                        <Button className="float-right" onClick={this.handleEditClick}>Edit Profile</Button>
                     </Card>
                 </Col>
             </Row>

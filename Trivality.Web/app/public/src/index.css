@@ -4,3 +4,15 @@ body {
   font-family: sans-serif;
   background-color: #D6D6DE;
 }
+
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+}
+
+#root {
+  min-height: 100%;
+}

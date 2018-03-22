@@ -1,0 +1,27 @@
+.ans-correct {
+    background-color: green
+}
+
+.ans-correct:hover {
+    background-color: hsl(120, 100%, 20%);
+    color: black;
+}
+
+.ans-correct:focus {
+    background-color: green;
+    color: black;
+}
+
+.ans-wrong {
+    background-color: red;
+}
+
+.ans-wrong:hover {
+    background-color: hsl(0, 100%, 45%);
+    color: black;    
+}
+
+.ans-wrong:focus{
+    background-color: red;
+    color: black;    
+}

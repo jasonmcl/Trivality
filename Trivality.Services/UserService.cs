@@ -13,10 +13,8 @@ using Trivality.Models.Requests;
 
 namespace Trivality.Services
 {
-    public class UserService
+    public class UserService : BaseService
     {
-        string connStr = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-
         public void LogIn(UserModel model)
         {
             var claims = new List<Claim>();
@@ -136,7 +134,7 @@ namespace Trivality.Services
             return salt;
         }
 
-        public UserModel GetCurrentUser()
+        public static UserModel GetCurrentUser()
         {
             var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
 
