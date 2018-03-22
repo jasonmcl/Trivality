@@ -39,7 +39,7 @@ namespace Trivality.Web.Controllers
         [Route("cookietest"), HttpGet]
         public HttpResponseMessage CookieTest()
         {
-            UserModel model = _userSvc.GetCurrentUser();
+            UserModel model = UserService.GetCurrentUser();
             ItemResponse<UserModel> resp = new ItemResponse<UserModel>();
             resp.Item = model;
             return Request.CreateResponse(HttpStatusCode.OK, resp);
@@ -102,7 +102,7 @@ namespace Trivality.Web.Controllers
         [Route("current"), HttpGet]
         public HttpResponseMessage GetCurrentUser()
         {
-            UserModel model = _userSvc.GetCurrentUser();
+            UserModel model = UserService.GetCurrentUser();
             ItemResponse<UserModel> resp = new ItemResponse<UserModel>();
             resp.Item = model;
             return Request.CreateResponse(HttpStatusCode.OK, resp);

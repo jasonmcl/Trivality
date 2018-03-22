@@ -5,6 +5,7 @@ using System.Web.Http;
 using Trivality.Models.Domain;
 using Trivality.Models.Requests;
 using Trivality.Models.Responses;
+using Trivality.Models.View_Models;
 using Trivality.Services;
 
 namespace Trivality.Web.Controllers
@@ -13,9 +14,11 @@ namespace Trivality.Web.Controllers
     public class AccountsController : ApiController
     {
         AccountService svc;
+        AccountDetailService adSvc;
         public AccountsController()
         {
             svc = new AccountService();
+            adSvc = new AccountDetailService();
         }
 
         [Route, HttpGet]
@@ -107,6 +110,26 @@ namespace Trivality.Web.Controllers
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
             }
+        }
+
+        [Route("getprofile"), HttpGet]
+        public HttpResponseMessage GetProfile()
+        {
+            int id = UserService.GetCurrentUser().Id;
+
+            ItemResponse<AccountDetailViewModel> resp = new ItemResponse<AccountDetailViewModel>();
+            resp.Item = adSvc.SelectByAccountId(id);
+            return Request.CreateResponse(HttpStatusCode.OK, resp);
+        }
+
+        [Route("updateprofile"), HttpPost]
+        public HttpResponseMessage UpdateProfile([FromBody]AccountDetailModel model)
+        {
+            model.AccountId = UserService.GetCurrentUser().Id;
+            adSvc.Update(model);
+            ItemResponse<AccountDetailViewModel> resp = new ItemResponse<AccountDetailViewModel>();
+            resp.Item = adSvc.SelectByAccountId(model.AccountId);
+            return Request.CreateResponse(HttpStatusCode.OK, resp);
         }
     }
 }

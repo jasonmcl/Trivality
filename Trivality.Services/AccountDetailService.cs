@@ -1,5 +1,6 @@
 ﻿using System.Data.SqlClient;
 using Trivality.Models.Domain;
+using Trivality.Models.View_Models;
 
 namespace Trivality.Services
 {
@@ -23,9 +24,9 @@ namespace Trivality.Services
             }
         }
 
-        public AccountDetailModel SelectByAccountId(int accountId)
+        public AccountDetailViewModel SelectByAccountId(int accountId)
         {
-            AccountDetailModel model = new AccountDetailModel();
+            AccountDetailViewModel model = new AccountDetailViewModel();
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 string cmdStr = "Account_Detail_SelectByAccountId";
@@ -40,6 +41,7 @@ namespace Trivality.Services
                         int index = 0;
                         model.AccountId = reader.GetInt32(index++);
                         model.ProfilePicId = reader.GetInt32(index++);
+                        model.PicturePath = System.Configuration.ConfigurationManager.AppSettings["AwsPath"] + reader.GetString(index++);
                         model.Description = reader.GetString(index++);
                     }
                     conn.Close();

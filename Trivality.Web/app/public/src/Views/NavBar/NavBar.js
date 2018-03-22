@@ -13,7 +13,7 @@ class NavBar extends React.Component {
         super(props);
         this.state = {
             collapsed: false,
-            current: '1',
+            current: '/',
             loginVisible: false,
             loggedIn: false,
             user: {}
@@ -22,6 +22,9 @@ class NavBar extends React.Component {
 
     componentDidMount = () => {
         this.getCurrUser();
+        this.setState({
+            current: this.props.location.pathname
+        })
     }
 
     getCurrUser = () => {
@@ -29,7 +32,7 @@ class NavBar extends React.Component {
         .then(resp => {
             const user = resp.data.item;
             console.log(user);
-            let loggedIn = user.id != 0;
+            let loggedIn = user.id !== 0;
             this.setState({
                 loggedIn: loggedIn,
                 user: user
@@ -73,27 +76,38 @@ class NavBar extends React.Component {
 
   render() {
     return (
-      <div>
-        <Layout>
-            <Sider className='sidebar-full' collapsible="true" style={{height: '100vh'}}>
+        <Layout style={{height: "100vh"}}>
+            <Sider className='sidebar-full' collapsible="true" >
                 <div className="logo" />
                 <Menu className='sidebar-menu' theme="dark" selectedKeys={[this.state.current]} onClick={this.handleClick}>
-                    <Menu.Item key="1">
+                    <Menu.Item key="/">
                         <NavLink to="/">
                             <Icon type="home"/>
                             <span className="nav-text">Home</span>
                         </NavLink>
                     </Menu.Item>
-                    <Menu.Item key="2">
+                    <Menu.Item key="/accounts">
                         <NavLink to='/accounts' className="nav-text">
                             <Icon type="user"/>
                             <span className="nav-text">Accounts</span>
                         </NavLink>
                     </Menu.Item>
-                    <Menu.Item key="3">
+                    <Menu.Item key="/profile">
                         <NavLink to='/profile'>
                             <Icon type="profile" />
                             <span className="nav-text">Profile</span>
+                        </NavLink>
+                    </Menu.Item>
+                    <Menu.Item key="/quizstart">
+                        <NavLink to='/quizstart'>
+                            <Icon type="question-circle" />
+                            <span className="nav-text">Start Quiz</span>
+                        </NavLink>
+                    </Menu.Item>
+                    <Menu.Item key="/webscrape">
+                        <NavLink to='/webscrape'>
+                            <Icon type="copy" />
+                            <span className="nav-text">Webscrape</span>
                         </NavLink>
                     </Menu.Item>
                 </Menu>
@@ -115,50 +129,10 @@ class NavBar extends React.Component {
                     </Menu>
                 </Header>
                 <Content>{this.props.children}</Content>
-                <Footer>Footer</Footer>
             </Layout>
         </Layout>
-      </div>
     );
   }
 }
 
 export default withRouter(NavBar);
-
-/*
-<div className="toggled" id="wrapper">
-                <div id="sidebar-wrapper" className="navbar-expand-lg">
-                    <ul className="sidebar-nav">
-                        <li>
-                            <NavLink exact to='/' className="sideLink" activeClassName="active" href=""><i className=""></i>Home</NavLink>
-                        </li>
-                        <li>
-                            <NavLink to='/accounts' className="sideLink" activeClassName="active" href=""><i className=""></i>Accounts</NavLink>
-                        </li>
-                        <li>
-                            <NavLink to='/accounts1' className="sideLink" activeClassName="active" href=""><i className=""></i>Accounts</NavLink>
-                        </li>
-                        <li>
-                            <NavLink to='/accounts2' className="sideLink" activeClassName="active" href=""><i className=""></i>Accounts</NavLink>
-                        </li>
-                        <li>
-                            <NavLink to='/accounts3' className="sideLink" activeClassName="active" href=""><i className=""></i>Accounts</NavLink>
-                        </li>
-                        <li>
-                            <NavLink to='/accounts4' className="sideLink" activeClassName="active" href=""><i className=""></i>Accounts</NavLink>
-                        </li>
-                        <li>
-                            <NavLink to='/accounts5' className="sideLink" activeClassName="active" href=""><i className=""></i>Accounts</NavLink>
-                        </li>
-                    </ul>
-                </div>
-                <div>
-                    <TopBar/>
-                </div>
-                <div id="page-content-wrapper">
-                    <div className="container-fluid">
-                        {this.props.children}
-                    </div>
-                </div>
-            </div>
-*/

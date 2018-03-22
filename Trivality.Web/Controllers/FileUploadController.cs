@@ -21,21 +21,21 @@ namespace Trivality.Web.Controllers
         static IAmazonS3 client;
         FileUploadService svc = new FileUploadService();
 
-        [Route("uploadtest"), HttpPost]
+        [Route("upload"), HttpPost]
         public HttpResponseMessage Upload()
         {
             HttpPostedFile postedFile = HttpContext.Current.Request.Files[0];
             string keyName = Path.GetFileNameWithoutExtension(postedFile.FileName) + '_' + Guid.NewGuid().ToString() + Path.GetExtension(postedFile.FileName);
             FileAddRequest fModel = new FileAddRequest
             {
-                AccountId = 1,
+                AccountId = UserService.GetCurrentUser().Id,
                 FileName = postedFile.FileName,
                 Size = postedFile.ContentLength,
                 Type = postedFile.ContentType,
                 SystemFileName = keyName,
-                ModifiedBy = "test"
+                ModifiedBy = UserService.GetCurrentUser().Email
             };
-            
+            int fileId = 0;
             using (client = new AmazonS3Client(Amazon.RegionEndpoint.USWest1))
             {
                 try
@@ -59,7 +59,7 @@ namespace Trivality.Web.Controllers
                     putRequest2.Metadata.Add("x-amz-meta-title", "someTitle");
                     PutObjectResponse response2 = client.PutObject(putRequest2);
 
-                    svc.Insert(fModel);
+                    fileId = svc.Insert(fModel);
                 }
                 catch (AmazonS3Exception amazonS3Exception)
                 {
@@ -69,7 +69,8 @@ namespace Trivality.Web.Controllers
             }
 
 
-            SuccessResponse resp = new SuccessResponse();
+            ItemResponse<int> resp = new ItemResponse<int>();
+            resp.Item = fileId;
             return Request.CreateResponse(HttpStatusCode.OK, resp);
         }
     }

@@ -134,7 +134,7 @@ namespace Trivality.Services
             return salt;
         }
 
-        public UserModel GetCurrentUser()
+        public static UserModel GetCurrentUser()
         {
             var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
 
