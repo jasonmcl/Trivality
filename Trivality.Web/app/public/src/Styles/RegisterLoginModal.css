@@ -1,0 +1,13 @@
+.modal-backdrop {
+    z-index: 100;
+}
+
+.btn-facebook {
+    background-color: #4267b2;
+    color: white;
+}
+
+.btn-facebook:hover {
+    color: #4267b2;
+    background-color: white;
+}

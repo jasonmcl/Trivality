@@ -1,6 +1,6 @@
 import React from 'react';
-import {Button, Row, Col} from "antd";
-import './Question.css';
+import {Button, Row, Col, Card} from "antd";
+import '../Styles/Question.css';
 
 function unencode(str) {
     let patterns = [
@@ -35,6 +35,14 @@ function unencode(str) {
         {
             regex: /&shy;/g,
             replace: ''
+        },
+        {
+            regex: /&eacute;/g,
+            replace: 'é'
+        }, 
+        {
+            regex: /&rsquo;/g,
+            replace: "'"
         }
     ]
     for(let i = 0; i < patterns.length; i++) {
@@ -46,8 +54,16 @@ function unencode(str) {
 
 function Question(props) {
 
+    let question = (
+        <Row type="flex" justify="center">
+            <Col>
+                <h3 className="question-title">{unencode(props.question)}</h3>
+            </Col>
+        </Row>
+    );
+
     let answers = props.answers.map((ans, index) => {
-        let cName = "btn-block"
+        let cName = "quiz-question btn-block"
         if(props.answerChosen) {
             if(ans.isCorrect) {
                 cName += " ans-correct";
@@ -63,20 +79,20 @@ function Question(props) {
 
     return(
         <div>
-            <Row type="flex" justify="center">
-                <Col>
-                    <h1>{unencode(props.question)}</h1>
-                </Col>
-            </Row>
-            <Row type="flex" justify="space-around">
-                {answers}
-                {
-                    props.answerChosen &&
-                    <Col span={23}>
-                        <Button onClick={props.nextQuestion} type="primary" className="float-right">Next Question</Button>
-                    </Col>
-                }
-            </Row>
+            <Card
+                className="question-card"
+                title={question}
+            >
+                <Row type="flex" justify="space-around">
+                    {answers}
+                    {
+                        props.answerChosen &&
+                        <Col span={23}>
+                            <Button onClick={props.nextQuestion} type="primary" className="float-right quiz-question">Next Question</Button>
+                        </Col>
+                    }
+                </Row>
+            </Card>
         </div>
     );
 }

@@ -18,7 +18,7 @@ class Clue extends React.Component{
 
     render(){
         return(
-            <Card>
+            <Card style={{marginTop: '15px'}}>
                 <h5>{this.props.clue.question}</h5>
                 <Divider />
                 { !this.state.hidden &&

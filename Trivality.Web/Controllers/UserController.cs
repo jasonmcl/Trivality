@@ -107,5 +107,37 @@ namespace Trivality.Web.Controllers
             resp.Item = model;
             return Request.CreateResponse(HttpStatusCode.OK, resp);
         }
+
+        [Route("login/facebook"), HttpPost]
+        public HttpResponseMessage LoginWithFacebook(FacebookUserAddRequest model)
+        {
+            int acctId = _userSvc.GetIdByEmail(model.Email);
+            if(acctId == 0)
+            {
+                AccountAddRequest aModel = new AccountAddRequest
+                {
+                    Username = model.Name,
+                    Email = model.Email,
+                    PasswordHash = "random password here",
+                    Salt = "salt",
+                    ModifiedBy = model.Email
+                };
+                acctId = _userSvc.Register(aModel);
+                if (acctId <= 0)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "There was an error registering this account");
+                }
+            }
+            UserModel uModel = new UserModel
+            {
+                Id = acctId,
+                Username = model.Name,
+                Email = model.Email
+            };
+            _userSvc.LogIn(uModel);
+
+            SuccessResponse resp = new SuccessResponse();
+            return Request.CreateResponse(HttpStatusCode.OK, resp);
+        }
     }
 }
