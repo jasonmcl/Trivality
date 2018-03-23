@@ -1,0 +1,46 @@
+.question-card {
+    margin: 0 25px;
+    /* background-color: ivory; */
+    /* background-color: rgb(253, 253, 253); */
+    /* background-color: hsl(216, 19%, 90%); */
+}
+
+.question-title {
+    white-space: pre-wrap !important;      /* CSS3 */   
+    white-space: -moz-pre-wrap !important; /* Firefox */    
+    white-space: -pre-wrap !important;     /* Opera <7 */   
+    white-space: -o-pre-wrap !important;   /* Opera 7 */    
+    word-wrap: break-word;      /* IE */
+}
+
+.quiz-question {
+    margin-top: 15px;
+}
+
+.ans-correct {
+    background-color: #4CA64C;
+}
+
+.ans-correct:hover {
+    background-color: #57b157;
+    color: black;
+}
+
+.ans-correct:focus {
+    background-color: #4CA64C;
+    color: black;
+}
+
+.ans-wrong {
+    background-color: #FF3232;
+}
+
+.ans-wrong:hover {
+    background-color: #fe4c4c;
+    color: black;    
+}
+
+.ans-wrong:focus{
+    background-color: #FF3232;
+    color: black;    
+}

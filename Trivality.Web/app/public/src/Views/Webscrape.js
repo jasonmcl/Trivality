@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import {Row, Col, Icon} from 'antd';
-import Clue from '../../Components/Clue';
+import Clue from '../Components/Clue';
 
 class Webscrape extends React.Component {
     constructor(props) {

@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import AccountListItem from '../Components/AccountListItem';
 
 class AccountList extends React.Component {
     constructor(props) {
@@ -10,11 +11,29 @@ class AccountList extends React.Component {
     }
 
     componentDidMount = () => {
+        this.getList();
+    }
+
+    getList = () => {
         axios.get('/api/accounts')
         .then(resp => {
             this.setState({
                 accountList: resp.data.item
             });
+        })
+    }
+
+    handleDeleteClick = (id) => {
+        axios.delete("/api/accounts/" + id)
+        .then(resp => {
+            this.getList();
+        });
+    }
+
+    handleEditUser = (user) => {
+        axios.put("/api/accounts/" + user.id, user)
+        .then(resp => {
+            this.getList();
         })
     }
 
@@ -27,8 +46,8 @@ class AccountList extends React.Component {
                             <th>Id</th>
                             <th>Username</th>
                             <th>Email</th>
-                            <th>PasswordHash</th>
-                            <th>Salt</th>
+                            <th>Password</th>
+                            {/* <th>Salt</th> */}
                             <th>Created Date</th>
                             <th>Modified Date</th>
                             <th>Modified By</th>
@@ -38,16 +57,7 @@ class AccountList extends React.Component {
                         {
                             this.state.accountList.map(acc => {
                                 return (
-                                    <tr key={acc.id}>
-                                        <td>{acc.id}</td>
-                                        <td>{acc.username}</td>
-                                        <td>{acc.email}</td>
-                                        <td>{acc.passwordHash}</td>
-                                        <td>{acc.salt}</td>
-                                        <td>{acc.createdDate}</td>
-                                        <td>{acc.modifiedDate}</td>
-                                        <td>{acc.modifiedBy}</td>
-                                    </tr>
+                                    <AccountListItem submitEdit={this.handleEditUser} onDeleteClick={this.handleDeleteClick} key={acc.id} acc={acc}/>
                                 );
                             })
                         }

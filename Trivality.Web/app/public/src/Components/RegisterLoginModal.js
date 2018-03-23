@@ -1,9 +1,9 @@
 import React from 'react';
-import './RegisterLoginModal.css';
-import Register from '../../Components/Register';
-import Login from '../../Components/Login';
+import '../Styles/RegisterLoginModal.css';
+import Register from './Register';
+import Login from './Login';
 import axios from 'axios';
-import {Modal, Tabs} from 'antd';
+import {Modal, Tabs, Button, Icon} from 'antd';
 const TabPane = Tabs.TabPane;
 
 class RegisterLoginModal extends React.Component {
@@ -85,12 +85,39 @@ class RegisterLoginModal extends React.Component {
         this.props.hideModal();
     }
 
+    handleFBClick = () => {
+        console.log("FB clicked");
+        FB.login(response => {
+            if (response.status === "connected") {
+                axios.get("https://graph.facebook.com/me?redirect=false&access_token=" + response.authResponse.accessToken + "&fields=email, name, picture")
+                    .then(resp => {
+                        axios.post("api/user/login/facebook", resp.data)
+                            .then(resp => {
+                                console.log(resp);
+                                this.props.hideModal();
+                                this.props.loginFinish();
+                            });
+                    });
+            } else {
+                console.log(response);
+            }
+        },{ scope: "public_profile, email" });
+    }
+
     render() {
         const rlTabs = (
             <Tabs defaultActiveKey="login" onChange={this.handleTabClick}>
                 <TabPane tab="Log in" key="login"><Login onInputChange={this.handleInputChange} formVal={this.state.loginInfo}/></TabPane>
                 <TabPane tab="Register" key="register"><Register onInputChange={this.handleInputChange} formVal={this.state.regInfo}/></TabPane>
             </Tabs>
+        );
+
+        const footer = (
+            <div>
+                <Button onClick={this.handleFBClick} className="float-left btn-facebook"><Icon type="facebook" />Continue with Facebook</Button>
+                <Button onClick={this.handleCancel}>Cancel</Button>
+                <Button type="primary" onClick={this.handleSubmitClick}>Submit</Button>
+            </div>
         );
 
         return(
@@ -102,6 +129,7 @@ class RegisterLoginModal extends React.Component {
                     onCancel={this.handleCancel}
                     bodyStyle={{padding:'0px'}}
                     maskStyle={{backgroundColor: 'rgba(34,34,34,0.75)'}}
+                    footer = {footer}
                 >
                 </Modal>
             </div>
@@ -110,35 +138,3 @@ class RegisterLoginModal extends React.Component {
 }
 
 export default RegisterLoginModal;
-
-/*
-<div className="modal fade" id={this.props.id} tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div className="modal-dialog modal-dialog-centered" role="document">
-                    <div className="modal-content">
-                    <div className="modal-header container-fluid">
-                        <nav className="nav nav-tabs nav-fill">
-                            <a className={"nav-item nav-link" + (this.state.activeTab==='login'?' active': '')} onClick={()=>this.handleTabClick('login')}>Log in</a>
-                            <a className={"nav-item nav-link" + (this.state.activeTab==='register'?' active': '')} onClick={()=>this.handleTabClick('register')}>Register</a>
-                        </nav>
-                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div className="modal-body">
-                        { 
-                            this.state.activeTab === 'register' &&
-                            <Register onInputChange={this.handleInputChange} formVal={this.state.regInfo} />
-                        }
-                        {
-                            this.state.activeTab === 'login' &&
-                            <Login onInputChange={this.handleInputChange} formVal={this.state.loginInfo} />
-                        }
-                    </div>
-                    <div className="modal-footer">
-                        <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button onClick={this.handleSubmitClick} type="button" className="btn btn-primary">Submit</button>
-                    </div>
-                    </div>
-                </div>
-            </div>
-*/

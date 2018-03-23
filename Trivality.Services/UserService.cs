@@ -134,6 +134,28 @@ namespace Trivality.Services
             return salt;
         }
 
+        public int GetIdByEmail(string email)
+        {
+            int id = 0;
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                string cmdStr = "accounts_getbyemail";
+                using (SqlCommand cmd = new SqlCommand(cmdStr, conn))
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Email", email);
+                    conn.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        id = reader.GetInt32(0);
+                    }
+                    conn.Close();
+                }
+            }
+            return id;
+        }
+
         public static UserModel GetCurrentUser()
         {
             var identity = HttpContext.Current.User.Identity as ClaimsIdentity;

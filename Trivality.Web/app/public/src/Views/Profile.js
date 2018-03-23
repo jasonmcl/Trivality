@@ -1,7 +1,8 @@
 import React from 'react';
 import { Row, Col, Card, Divider, Button, Input, Upload, Icon } from 'antd';
 import axios from 'axios';
-import './Profile.css';
+import SavedResults from './SavedResults';
+import '../Styles/Profile.css';
 const { TextArea } = Input;
 
 class Profile extends React.Component {
@@ -120,7 +121,6 @@ class Profile extends React.Component {
                 <Col span={8}>
                     <Card
                         style={{margin: '5px'}}
-                        bordered={false} 
                         title={ProfileTitle}>
                         {!this.state.editing ? 
                         <p className='wrap'>{this.state.accountInfo.description}</p>
@@ -132,6 +132,11 @@ class Profile extends React.Component {
                         }
                         <Divider />
                         <Button className="float-right" onClick={this.handleEditClick}>Edit Profile</Button>
+                    </Card>
+                </Col>
+                <Col span={16}>
+                    <Card title="Saved Quiz Results" style={{margin: '5px'}}>
+                        <SavedResults/>
                     </Card>
                 </Col>
             </Row>

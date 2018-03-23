@@ -1,5 +1,5 @@
 import React from 'react';
-import {Row, Col, InputNumber, Select, Button} from 'antd';
+import {Row, Col, InputNumber, Select, Button, Card} from 'antd';
 const Option = Select.Option;
 
 class QuizForm extends React.Component {
@@ -23,14 +23,18 @@ class QuizForm extends React.Component {
             <div>
                 <Row type="flex" justify="center">
                     <Col span={12}>
+                        <Card className="quiz-form-card">
                         <label>Number of Questions:</label>
                         <InputNumber
                             value={this.state.numQuestions}
                             onChange={(val) => this.handleChange(val, 'numQuestions')}
                             style={{width: '100%'}}>
                         </InputNumber>
-                        <label>Select a category: </label>                    
-                        <Select onChange={(val) => this.handleChange(val, 'category')}  defaultValue="any" className="form-control">
+                        <label className="quiz-margin">Select a category: </label>                    
+                        <Select 
+                            onChange={(val) => this.handleChange(val, 'category')}  
+                            defaultValue="any" 
+                            className="form-control">
                             <Option value="any">Any Category</Option>
                             <Option value="9">General Knowledge</Option>
                             <Option value="27">Animals</Option>
@@ -58,14 +62,22 @@ class QuizForm extends React.Component {
                             <Option value="19">Science: Mathematics</Option>
 
                         </Select>
-                        <label>Select a difficulty:</label>                    
-                        <Select onChange={(val) => this.handleChange(val, 'difficulty')} defaultValue="any" className="form-control">
+                        <label className="quiz-margin">Select a difficulty:</label>                    
+                        <Select 
+                            onChange={(val) => this.handleChange(val, 'difficulty')} 
+                            defaultValue="any" 
+                            className="form-control">
                             <Option value="any">Any Difficulty</Option>
                             <Option value="easy">Easy</Option>
                             <Option value="medium">Medium</Option>
                             <Option value="hard">Hard</Option>
                         </Select>
-                        <Button onClick={() => this.props.startQuiz(this.state)} className="float-right" type="primary">Start Quiz</Button>
+                        <Button 
+                            onClick={() => this.props.startQuiz(this.state)} 
+                            className="float-right quiz-margin" 
+                            type="primary">Start Quiz
+                        </Button>
+                    </Card>
                     </Col>
                 </Row>
             </div>
